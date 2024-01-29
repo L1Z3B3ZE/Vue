@@ -15,8 +15,10 @@ Vue.component('product', {
            <h1>{{ title }}</h1>
            <p v-if="inStock">In stock</p>
            <p v-else>Out of Stock</p>
-           <product-details :details="details"></product-details>
-           <p>Shipping: {{ shipping }}</p>
+           <ul>
+               <li v-for="detail in details">{{ detail }}</li>
+           </ul>
+          <p>Shipping: {{ shipping }}</p>
            <div
                    class="color-box"
                    v-for="(variant, index) in variants"
@@ -24,11 +26,6 @@ Vue.component('product', {
                    :style="{ backgroundColor:variant.variantColor }"
                    @mouseover="updateProduct(index)"
            ></div>
-          
-
-           <div class="cart">
-               <p>Cart({{ cart }})</p>
-           </div>
 
            <button
                    v-on:click="addToCart"
@@ -67,7 +64,7 @@ Vue.component('product', {
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(index) {
             this.selectedVariant = index;
@@ -91,30 +88,20 @@ Vue.component('product', {
                 return 2.99
             }
         }
-
     }
 })
-
-Vue.component('product-details', {
-    props: {
-        details: {
-            type: Array,
-            required: true
-        }
-    },
-    template: `
-    <ul>
-        <li v-for="detail in details">{{ detail }}</li>
-    </ul>
-  `
-});
-
-
 let app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
+        cart: 0
+    },
+    methods: {
+        updateCart() {
+            this.cart += 1;
+        }
     }
+
 })
 
 
