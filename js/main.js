@@ -133,7 +133,11 @@ Vue.component('product', {
         premium: {
             type: Boolean,
             required: true
-        }
+        },
+        cart: {
+            type: Array,
+            required: true
+        },
     },
     template: `
    <div class="product">
@@ -160,7 +164,7 @@ Vue.component('product', {
            >
                Add to cart
            </button>    
-           
+           <p>Number of this socks in cart: {{ cartQuantity }}</p>
        </div>      
        <product-tabs :reviews="reviews" :shipping="shipping" :details="details">></product-tabs> 
    </div>    
@@ -178,13 +182,13 @@ Vue.component('product', {
                     variantId: 2234,
                     variantColor: 'green',
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
-                    variantQuantity: 10
+                    variantQuantity: 130
                 },
                 {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                    variantQuantity: 0
+                    variantQuantity: 150
                 }
             ],
             reviews: []
@@ -196,7 +200,6 @@ Vue.component('product', {
         },
         updateProduct(index) {
             this.selectedVariant = index;
-            console.log(index);
         },
     },
     computed: {
@@ -216,9 +219,13 @@ Vue.component('product', {
                 return 2.99
             }
         },
-
+        cartQuantity() {
+            return this.cart.filter(item => item === this.variants[this.selectedVariant].variantId).length;
+        }
     }
 })
+
+
 let app = new Vue({
     el: '#app',
     data: {
