@@ -6,6 +6,14 @@ Vue.component('product-tabs', {
         reviews: {
             type: Array,
             required: false
+        },
+        shipping: {
+            type: String,
+            required: true
+        },
+        details: {
+            type: Array,
+            required: true
         }
     },
     template: `
@@ -30,11 +38,19 @@ Vue.component('product-tabs', {
        <div v-show="selectedTab === 'Make a Review'">
          <product-review></product-review>
        </div>
+       <div v-show="selectedTab === 'Shipping'">
+           <p>Shipping: {{ shipping }}</p>
+       </div>
+       <div v-show="selectedTab === 'Details'">
+           <ul>
+               <li v-for="detail in details">{{ detail }}</li>
+           </ul>
+       </div>
      </div>
 `,
     data() {
         return {
-            tabs: ['Reviews', 'Make a Review'],
+            tabs: ['Reviews', 'Make a Review', 'Shipping', 'Details'],
             selectedTab: 'Reviews'  // устанавливается с помощью @click
         }
     }
@@ -121,7 +137,7 @@ Vue.component('product', {
     },
     template: `
    <div class="product">
-    <div class="product-image">
+       <div class="product-image">
            <img :src="image" :alt="altText"/>
        </div>
 
@@ -129,10 +145,6 @@ Vue.component('product', {
            <h1>{{ title }}</h1>
            <p v-if="inStock">In stock</p>
            <p v-else>Out of Stock</p>
-           <ul>
-               <li v-for="detail in details">{{ detail }}</li>
-           </ul>
-          <p>Shipping: {{ shipping }}</p>
            <div
                    class="color-box"
                    v-for="(variant, index) in variants"
@@ -150,8 +162,8 @@ Vue.component('product', {
            </button>    
            
        </div>      
-       <product-tabs :reviews="reviews"></product-tabs> 
-       </div>    
+       <product-tabs :reviews="reviews" :shipping="shipping" :details="details">></product-tabs> 
+   </div>    
        
  `,
     data() {
